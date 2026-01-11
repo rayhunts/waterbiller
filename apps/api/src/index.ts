@@ -13,7 +13,7 @@ const { user } = models.insert;
 const app = new Elysia()
   .use(cors())
   .use(swagger())
-  .get("/", () => `Hello Elysia ${process.env.API_URL}`)
+  .get("/", () => "Hello Elysia")
   .post(
     "/sign-in",
     async ({ body, set }) => {
@@ -127,7 +127,7 @@ const app = new Elysia()
         }),
       },
     }
-  )
+  );
 
 export type App = typeof app;
 
