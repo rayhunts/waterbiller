@@ -1,0 +1,18 @@
+{
+  "buildCommand": "bun install",
+  "devCommand": "bun run dev",
+  "installCommand": "bun install",
+  "framework": null,
+  "bunVersion": "1.x",
+  "functions": {
+    "src/index.ts": {
+      "runtime": "edge"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/src/index.ts"
+    }
+  ]
+}
