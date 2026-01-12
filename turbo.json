@@ -6,7 +6,7 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["build/**", "dist/**"]
+      "outputs": ["./apps/web/build/**"]
     },
     "lint": {
       "dependsOn": ["^lint"]
