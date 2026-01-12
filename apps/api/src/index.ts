@@ -1,127 +1,83 @@
-import { Elysia, t } from "elysia";
+import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 import { openapi } from "@elysiajs/openapi";
-import bcrypt from "bcrypt";
 
-import { models } from "./database/models";
-import { userRepository } from "./repositories/user.repository";
-import { userController } from "./controllers/user.controller";
+// Import routes
+import { authRoutes } from "./api/routes/auth.routes";
+import { customersRoutes } from "./api/routes/customers.routes";
+import { metersRoutes } from "./api/routes/meters.routes";
+import { readingsRoutes } from "./api/routes/readings.routes";
+import { billsRoutes } from "./api/routes/bills.routes";
+import { paymentsRoutes } from "./api/routes/payments.routes";
 
-const { user } = models.insert;
-
+/**
+ * Water Billing Management API
+ * Built with Clean Architecture (3-layer pattern)
+ */
 const app = new Elysia()
   .use(cors())
-  .use(openapi())
-  .use(userController)
-  .get("/", () => "Hello Elysia")
-  .post(
-    "/sign-in",
-    async ({ body, set }) => {
-      try {
-        const user = await userRepository.findByEmail(body.email);
-
-        if (!user) {
-          set.status = 400;
-          return {
-            error: "Invalid username or password",
-            status: 400,
-          };
-        }
-
-        const passwordMatch = await bcrypt.compare(body.password, user.password);
-
-        if (!passwordMatch) {
-          set.status = 400;
-          return {
-            error: "Invalid username or password",
-            status: 400,
-          };
-        }
-
-        return {
-          id: user.id,
-          name: user.name,
-          username: user.username,
-          email: user.email,
-        };
-      } catch (error) {
-        set.status = 400;
-        return {
-          error: "Failed to sign in",
-          status: 400,
-        };
-      }
-    },
-    {
-      body: t.Object({
-        email: t.String({
-          format: "email",
-        }),
-        password: t.String(),
-      }),
-      response: {
-        200: t.Object({
-          id: t.Number(),
-          name: t.String(),
-          username: t.String(),
-          email: t.String(),
-        }),
-        400: t.Object({
-          error: t.String(),
-          status: t.Number(),
-        }),
+  .use(
+    openapi({
+      documentation: {
+        info: {
+          title: "Water Billing Management API",
+          version: "1.0.0",
+          description: "A comprehensive water billing management system with customer, meter, reading, billing, and payment management capabilities.",
+        },
+        tags: [
+          {
+            name: "Authentication",
+            description: "Authentication and authorization endpoints",
+          },
+          {
+            name: "Customers",
+            description: "Customer management endpoints",
+          },
+          {
+            name: "Meters",
+            description: "Water meter management endpoints",
+          },
+          {
+            name: "Readings",
+            description: "Meter reading management endpoints",
+          },
+          {
+            name: "Bills",
+            description: "Bill generation and management endpoints",
+          },
+          {
+            name: "Payments",
+            description: "Payment processing and tracking endpoints",
+          },
+        ],
+        servers: [
+          {
+            url: process.env.VERCEL_URL || "http://localhost:3000",
+            description: "API Server",
+          },
+        ],
       },
-    }
+    })
   )
-  .post(
-    "/sign-up",
-    async ({ body, set }) => {
-      try {
-        const hashedPassword = await bcrypt.hash(body.password, 10);
-
-        const newUser = await userRepository.create({
-          name: body.name,
-          username: body.username,
-          email: body.email,
-          password: hashedPassword,
-        });
-
-        return newUser;
-      } catch (error: any) {
-        set.status = 400;
-        if (error.code === "23505") {
-          return {
-            error: "Username or email already exists",
-            status: 400,
-          };
-        }
-        return {
-          error: "Failed to create user",
-          status: 400,
-        };
-      }
+  .get("/", () => ({
+    message: "Water Billing Management API",
+    version: "1.0.0",
+    endpoints: {
+      auth: "/auth",
+      customers: "/customers",
+      meters: "/meters",
+      readings: "/readings",
+      bills: "/bills",
+      payments: "/payments",
     },
-    {
-      body: t.Object({
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        password: user.password,
-      }),
-      response: {
-        200: t.Object({
-          id: t.Number(),
-          name: t.String(),
-          username: t.String(),
-          email: t.String(),
-        }),
-        400: t.Object({
-          error: t.String(),
-          status: t.Number(),
-        }),
-      },
-    }
-  );
+  }))
+  // Billing routes
+  .use(authRoutes)
+  .use(customersRoutes)
+  .use(metersRoutes)
+  .use(readingsRoutes)
+  .use(billsRoutes)
+  .use(paymentsRoutes);
 
 export type App = typeof app;
 
@@ -129,5 +85,6 @@ export default app;
 
 // Only listen when running locally (not on Vercel)
 if (process.env.NODE_ENV !== "production") {
-  console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
+  console.log(`🦊 Water Billing API is running at ${app.server?.hostname}:${app.server?.port}`);
+  console.log(`📚 Documentation: ${app.server?.hostname}:${app.server?.port}/swagger`);
 }
