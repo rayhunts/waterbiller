@@ -1,5 +1,5 @@
 import { treaty } from "@elysiajs/eden";
-import type { AnyElysia } from "elysia";
+import { App } from "api";
 
 // Environment-aware API URL configuration
 const getApiUrl = () => {
@@ -12,4 +12,4 @@ const getApiUrl = () => {
   return process.env.VITE_API_URL;
 };
 
-export const api = treaty<AnyElysia>(getApiUrl());
+export const api = treaty<App>(getApiUrl());
