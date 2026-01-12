@@ -82,9 +82,3 @@ const app = new Elysia()
 export type App = typeof app;
 
 export default app;
-
-// Only listen when running locally (not on Vercel)
-if (process.env.NODE_ENV !== "production") {
-  console.log(`🦊 Water Billing API is running at ${app.server?.hostname}:${app.server?.port}`);
-  console.log(`📚 Documentation: ${app.server?.hostname}:${app.server?.port}/swagger`);
-}
