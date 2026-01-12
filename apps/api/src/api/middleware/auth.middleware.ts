@@ -5,7 +5,8 @@ import { Elysia } from "elysia";
  * Note: This middleware expects the JWT plugin to already be installed by the parent route
  */
 export const authMiddleware = new Elysia()
-  .derive(async ({ jwt, headers, set }) => {
+  .derive(async (context: any) => {
+    const { jwt, headers, set } = context;
     const authorization = headers.authorization;
 
     if (!authorization || !authorization.startsWith("Bearer ")) {
