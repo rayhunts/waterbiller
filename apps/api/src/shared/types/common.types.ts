@@ -14,8 +14,8 @@ export interface CreateCustomerDto {
   email: string;
   username: string;
   password: string;
-  phone: string;
-  address: string;
+  phone?: string;
+  address?: string;
 }
 
 export interface UpdateCustomerDto {
