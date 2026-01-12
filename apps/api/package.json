@@ -20,8 +20,7 @@
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.1",
     "drizzle-typebox": "^0.3.3",
-    "elysia": "latest",
-    "pg": "^8.16.3"
+    "elysia": "latest"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
