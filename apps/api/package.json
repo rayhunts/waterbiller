@@ -7,6 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
+    "build": "echo 'No build step required for Bun/Elysia'",
+    "start": "bun run src/index.ts",
     "db:generate": "bun drizzle-kit generate",
     "db:migrate": "bun drizzle-kit migrate && exit 0",
     "db:push": "bun drizzle-kit push",
