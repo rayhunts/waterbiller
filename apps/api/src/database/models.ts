@@ -4,7 +4,7 @@ import { t } from "elysia";
 import { table } from "./schema";
 import { spreads } from "./utils";
 
-export const db = {
+export const models = {
   insert: spreads(
     {
       user: createInsertSchema(table.users, {

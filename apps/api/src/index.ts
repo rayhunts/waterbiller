@@ -1,10 +1,10 @@
 import { Elysia, t } from "elysia";
 import { cors } from "@elysiajs/cors";
-import { swagger } from "@elysiajs/swagger";
+import { openapi } from "@elysiajs/openapi";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 
-import { db as models } from "./database/models";
+import { models } from "./database/models";
 import { db } from "./database/client";
 import { table } from "./database/schema";
 
@@ -12,7 +12,7 @@ const { user } = models.insert;
 
 const app = new Elysia()
   .use(cors())
-  .use(swagger())
+  .use(openapi())
   .get("/", () => "Hello Elysia")
   .post(
     "/sign-in",
