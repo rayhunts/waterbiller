@@ -50,12 +50,6 @@ const app = new Elysia()
             description: "Payment processing and tracking endpoints",
           },
         ],
-        servers: [
-          {
-            url: process.env.VERCEL_URL || "http://localhost:3000",
-            description: "API Server",
-          },
-        ],
       },
     })
   )
