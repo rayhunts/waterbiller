@@ -1,24 +1,24 @@
 import { Elysia, t } from "elysia";
 import { cors } from "@elysiajs/cors";
 import { openapi } from "@elysiajs/openapi";
-import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 
 import { models } from "./database/models";
-import { db } from "./database/client";
-import { table } from "./database/schema";
+import { userRepository } from "./repositories/user.repository";
+import { userController } from "./controllers/user.controller";
 
 const { user } = models.insert;
 
 const app = new Elysia()
   .use(cors())
   .use(openapi())
+  .use(userController)
   .get("/", () => "Hello Elysia")
   .post(
     "/sign-in",
     async ({ body, set }) => {
       try {
-        const [user] = await db.select().from(table.users).where(eq(table.users.email, body.email)).limit(1);
+        const user = await userRepository.findByEmail(body.email);
 
         if (!user) {
           set.status = 400;
@@ -79,20 +79,12 @@ const app = new Elysia()
       try {
         const hashedPassword = await bcrypt.hash(body.password, 10);
 
-        const [newUser] = await db
-          .insert(table.users)
-          .values({
-            name: body.name,
-            username: body.username,
-            email: body.email,
-            password: hashedPassword,
-          })
-          .returning({
-            id: table.users.id,
-            name: table.users.name,
-            username: table.users.username,
-            email: table.users.email,
-          });
+        const newUser = await userRepository.create({
+          name: body.name,
+          username: body.username,
+          email: body.email,
+          password: hashedPassword,
+        });
 
         return newUser;
       } catch (error: any) {
