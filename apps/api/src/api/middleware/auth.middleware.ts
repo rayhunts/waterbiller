@@ -1,17 +1,10 @@
 import { Elysia } from "elysia";
-import { jwt } from "@elysiajs/jwt";
-import { appConfig } from "../../shared/config/app.config";
 
 /**
  * JWT Authentication Middleware
+ * Note: This middleware expects the JWT plugin to already be installed by the parent route
  */
 export const authMiddleware = new Elysia()
-  .use(
-    jwt({
-      name: "jwt",
-      secret: appConfig.jwt.secret,
-    })
-  )
   .derive(async ({ jwt, headers, set }) => {
     const authorization = headers.authorization;
 
