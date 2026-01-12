@@ -1,14 +1,22 @@
 import { treaty, Treaty } from "@elysiajs/eden";
 import type { App } from "api";
-// Environment-aware API URL configuration
+
 const getApiUrl = () => {
-  // Check if running in browser
   if (globalThis.window !== undefined) {
-    // In browser: check for Vite environment variable
-    // @ts-expect-error - import.meta.env is available in Vite
+    // @ts-expect-error - Vite env
     return import.meta.env?.VITE_API_URL;
   }
   return process.env.VITE_API_URL;
 };
 
-export const api: Treaty.Create<App> = treaty<App>(getApiUrl());
+const getAuthHeaders = (): Record<string, string> => {
+  // Only access localStorage in browser
+  if (globalThis.window !== undefined) return {};
+
+  const token = localStorage.getItem("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+export const api: Treaty.Create<App> = treaty<App>(getApiUrl(), {
+  headers: getAuthHeaders,
+});
