@@ -10,7 +10,8 @@
     "db:generate": "bun drizzle-kit generate",
     "db:migrate": "bun drizzle-kit migrate && exit 0",
     "db:push": "bun drizzle-kit push",
-    "db:studio": "bun drizzle-kit studio"
+    "db:studio": "bun drizzle-kit studio",
+    "postinstall": "bun run db:migrate"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.4.1",

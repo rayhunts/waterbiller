@@ -1,6 +1,5 @@
-import { treaty } from "@elysiajs/eden";
-import { App } from "api";
-
+import { treaty, Treaty } from "@elysiajs/eden";
+import type { App } from "api";
 // Environment-aware API URL configuration
 const getApiUrl = () => {
   // Check if running in browser
@@ -12,4 +11,4 @@ const getApiUrl = () => {
   return process.env.VITE_API_URL;
 };
 
-export const api = treaty<App>(getApiUrl());
+export const api: Treaty.Create<App> = treaty<App>(getApiUrl());
