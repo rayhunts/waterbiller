@@ -1,135 +1,225 @@
-# Turborepo starter
+# WaterBiller
 
-This Turborepo starter is maintained by the Turborepo core team.
+A full-stack water billing management application built with modern web technologies.
 
-## Using this example
+## Overview
 
-Run the following command:
+WaterBiller is a production-ready monorepo application for managing water billing operations. It features a React-based frontend with server-side rendering and a high-performance Bun-native backend API, all connected through end-to-end type-safe communication.
 
-```sh
-npx create-turbo@latest
+## Tech Stack
+
+- **Runtime**: [Bun](https://bun.sh) - Fast JavaScript runtime and package manager
+- **Monorepo**: [Turborepo](https://turborepo.com) - High-performance build system
+- **Frontend**: [React Router 7](https://reactrouter.com) - Modern routing with SSR support
+- **Backend**: [Elysia.js](https://elysiajs.com) - Fast Bun-native web framework
+- **Database**: [PostgreSQL](https://postgresql.org) with [Drizzle ORM](https://orm.drizzle.team)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com) - Utility-first CSS framework
+- **Type Safety**: [TypeScript 5.9.2](https://www.typescriptlang.org) - End-to-end type safety
+- **API Client**: [Eden Treaty](https://elysiajs.com/eden/treaty/overview.html) - Type-safe API consumption
+
+## Project Structure
+
+This Turborepo workspace contains:
+
+### Apps
+
+- [apps/web](apps/web) - React Router 7 frontend with SSR
+- [apps/api](apps/api) - Elysia.js backend API running on Bun
+
+### Packages
+
+- [packages/libs](packages/libs) - Shared library with type-safe API client (Eden Treaty)
+- [packages/eslint-config](packages/eslint-config) - Shared ESLint configuration
+- [packages/typescript-config](packages/typescript-config) - Shared TypeScript configurations
+
+All packages and apps are written in TypeScript.
+
+## Prerequisites
+
+- [Bun](https://bun.sh) v1.3.4 or higher
+- [PostgreSQL](https://postgresql.org) database
+
+## Getting Started
+
+### 1. Install Dependencies
+
+```bash
+bun install
 ```
 
-## What's inside?
+### 2. Set Up Environment Variables
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+**API Configuration** ([apps/api/.env](apps/api/.env)):
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/waterbiller
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+**Web Configuration** ([apps/web/.env](apps/web/.env)):
+```env
+VITE_API_URL=http://localhost:3000
 ```
 
-### Develop
+### 3. Database Setup
 
-To develop all apps and packages, run the following command:
+```bash
+cd apps/api
 
+# Generate migrations from schema
+bun run db:generate
+
+# Run migrations
+bun run db:migrate
+
+# Or push schema directly to database (dev only)
+bun run db:push
+
+# Open Drizzle Studio (database GUI)
+bun run db:studio
 ```
-cd my-turborepo
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+### 4. Start Development Servers
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+From the root directory:
+
+```bash
+# Start all apps in development mode
+bun run dev
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+Or start apps individually:
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+```bash
+# Start only the web app
 turbo dev --filter=web
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+# Start only the API
+turbo dev --filter=api
 ```
 
-### Remote Caching
+The web app will be available at http://localhost:5173 and the API at http://localhost:3000.
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+## Development Commands
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+### Root Level Commands
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+```bash
+# Development mode (all apps)
+bun run dev
 
+# Build all apps and packages
+bun run build
+
+# Lint all code
+bun run lint
+
+# Type-check all packages
+bun run check-types
+
+# Format code
+bun run format
 ```
-cd my-turborepo
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+### API Commands
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```bash
+cd apps/api
+
+# Development mode with hot reload
+bun run dev
+
+# Database management
+bun run db:generate    # Generate migrations from schema changes
+bun run db:migrate     # Apply migrations to database
+bun run db:push        # Push schema directly (dev only)
+bun run db:studio      # Open Drizzle Studio GUI
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### Web Commands
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+```bash
+cd apps/web
 
+# Development server
+bun run dev
+
+# Production build
+bun run build
+
+# Start production server
+bun run start
+
+# Type-check
+bun run typecheck
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+## Architecture Highlights
+
+### End-to-End Type Safety
+
+The monorepo architecture enables complete type safety from database to frontend:
+
+1. Database schema is defined with Drizzle ORM
+2. API routes use TypeBox for runtime validation
+3. API exports its type for the frontend
+4. Eden Treaty client provides fully typed API calls in the frontend
+
+Example:
+```typescript
+import { api } from "@repo/libs"
+
+// Fully typed with autocomplete and type checking
+const { data, error } = await api["sign-in"].post({
+  email: "user@example.com",
+  password: "password"
+})
 ```
+
+### File-Based Routing
+
+React Router 7 automatically generates routes from the [apps/web/src/app/routes/](apps/web/src/app/routes/) directory structure, with support for:
+
+- Server-side rendering
+- Data loading
+- Meta tags for SEO
+- Nested layouts
+
+### Database Management
+
+Drizzle ORM provides type-safe database operations with:
+
+- Schema defined in [apps/api/src/database/schema.ts](apps/api/src/database/schema.ts)
+- Automatic TypeScript types from schema
+- SQL-like query builder
+- Migration generation and management
+
+## Deployment
+
+The project is configured for Vercel deployment:
+
+- **API**: Deploys to Vercel with Bun runtime, automatic migrations on build
+- **Web**: Uses React Router's Vercel preset for optimal performance
+
+Each app has its own [vercel.json](apps/api/vercel.json) configuration.
+
+## Package Manager
+
+This project uses **Bun** as the package manager (specified in `package.json` as `"packageManager": "bun@1.3.4"`). Always use `bun` commands instead of npm/yarn/pnpm.
 
 ## Useful Links
 
-Learn more about the power of Turborepo:
+### Framework Documentation
+- [Turborepo Docs](https://turborepo.com/docs)
+- [React Router 7 Docs](https://reactrouter.com/dev)
+- [Elysia.js Docs](https://elysiajs.com)
+- [Drizzle ORM Docs](https://orm.drizzle.team)
+- [Eden Treaty Docs](https://elysiajs.com/eden/treaty/overview.html)
 
+### Turborepo Features
 - [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
 - [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
 - [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
 - [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+
+## License
+
+[Add your license here]
