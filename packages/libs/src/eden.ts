@@ -1,10 +1,10 @@
 import { treaty } from "@elysiajs/eden";
-import type { App } from "api";
+import type { AnyElysia } from "elysia";
 
 // Environment-aware API URL configuration
 const getApiUrl = () => {
   // Check if running in browser
-  if (typeof window !== "undefined") {
+  if (globalThis.window !== undefined) {
     // In browser: check for Vite environment variable
     // @ts-expect-error - import.meta.env is available in Vite
     return import.meta.env?.VITE_API_URL;
@@ -12,4 +12,4 @@ const getApiUrl = () => {
   return process.env.VITE_API_URL;
 };
 
-export const api = treaty<App>(getApiUrl());
+export const api = treaty<AnyElysia>(getApiUrl());
