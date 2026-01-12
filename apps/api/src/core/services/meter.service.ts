@@ -17,10 +17,7 @@ export class MeterService {
     installationDate: Date;
   }): Promise<Meter> {
     // Business rule: Meter number must be unique (handled by repository)
-    return await this.meterRepository.create({
-      ...data,
-      status: "active",
-    });
+    return await this.meterRepository.create(data);
   }
 
   /**
@@ -37,9 +34,7 @@ export class MeterService {
     }
 
     meter.assignToCustomer(customerId);
-    return await this.meterRepository.update(meterId, {
-      customerId: meter.customerId,
-    });
+    return await this.meterRepository.assignToCustomer(meterId, customerId);
   }
 
   /**
@@ -62,7 +57,7 @@ export class MeterService {
     meterId: string,
     data: Partial<{
       location: string;
-      status: string;
+      status: "active" | "inactive";
     }>
   ): Promise<Meter> {
     const meter = await this.meterRepository.findById(meterId);
@@ -70,7 +65,7 @@ export class MeterService {
       throw new Error("Meter not found");
     }
 
-    return await this.meterRepository.update(meterId, data);
+    return await this.meterRepository.update(meterId, data as Partial<{ location: string; status: "active" | "inactive" }>);
   }
 
   /**

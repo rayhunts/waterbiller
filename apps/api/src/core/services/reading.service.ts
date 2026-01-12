@@ -56,19 +56,17 @@ export class ReadingService {
       previousReading,
       data.currentReading,
       consumption,
-      data.imageUrl,
-      data.notes
+      data.imageUrl ?? null,
+      data.notes ?? null,
+      new Date()
     );
 
     return await this.readingRepository.create({
       meterId: reading.meterId,
-      customerId: reading.customerId,
-      readingDate: reading.readingDate,
-      previousReading: reading.previousReading,
       currentReading: reading.currentReading,
-      consumption: reading.consumption,
-      imageUrl: reading.imageUrl,
-      notes: reading.notes,
+      readingDate: reading.readingDate,
+      imageUrl: reading.imageUrl ?? undefined,
+      notes: reading.notes ?? undefined,
     });
   }
 

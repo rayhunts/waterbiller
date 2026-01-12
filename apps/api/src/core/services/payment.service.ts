@@ -50,7 +50,8 @@ export class PaymentService {
       new Date(),
       data.paymentMethod,
       data.transactionReference || `TXN-${Date.now()}`,
-      "success"
+      "success",
+      new Date()
     );
 
     // Save payment
@@ -61,7 +62,6 @@ export class PaymentService {
       paymentDate: payment.paymentDate,
       paymentMethod: payment.paymentMethod,
       transactionReference: payment.transactionReference,
-      status: payment.status,
     });
 
     // Check if bill is now fully paid

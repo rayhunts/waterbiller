@@ -41,7 +41,7 @@ export class MeterHandler {
     id: string,
     data: Partial<{
       location: string;
-      status: string;
+      status: "active" | "inactive";
     }>
   ) {
     return await meterService.updateMeter(id, data);
