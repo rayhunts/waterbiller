@@ -31,6 +31,5 @@
   "module": "src/index.js",
   "overrides": {
     "@sinclair/typebox": "0.34.0"
-  },
-  "postinstall": "bun run db:migrate"
+  }
 }
