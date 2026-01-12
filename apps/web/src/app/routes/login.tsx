@@ -18,13 +18,13 @@ export default function Login() {
   const [error, setError] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async (data: { username: string; password: string }) => {
+  const handleLogin = async (data: { email: string; password: string }) => {
     setError(undefined);
     setIsLoading(true);
 
     try {
       const { data: result, error } = await api["sign-in"].post({
-        username: data.username,
+        email: data.email,
         password: data.password,
       });
 

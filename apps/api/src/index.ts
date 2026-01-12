@@ -18,7 +18,7 @@ const app = new Elysia()
     "/sign-in",
     async ({ body, set }) => {
       try {
-        const [user] = await db.select().from(table.users).where(eq(table.users.username, body.username)).limit(1);
+        const [user] = await db.select().from(table.users).where(eq(table.users.email, body.email)).limit(1);
 
         if (!user) {
           set.status = 400;
@@ -54,7 +54,9 @@ const app = new Elysia()
     },
     {
       body: t.Object({
-        username: t.String(),
+        email: t.String({
+          format: "email",
+        }),
         password: t.String(),
       }),
       response: {
@@ -135,6 +137,5 @@ export default app;
 
 // Only listen when running locally (not on Vercel)
 if (process.env.NODE_ENV !== "production") {
-  app.listen(3000);
   console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
 }
