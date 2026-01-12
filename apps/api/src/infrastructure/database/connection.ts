@@ -8,6 +8,6 @@ if (!process.env.DATABASE_URL) {
 
 /**
  * Database connection instance
- * Configured for Bun SQLite driver with Drizzle ORM
+ * Configured for Bun Postgresql driver with Drizzle ORM
  */
 export const db = drizzle(process.env.DATABASE_URL, { schema });
